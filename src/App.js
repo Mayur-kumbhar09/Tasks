@@ -19,10 +19,11 @@ const Item = styled(Paper)(({ theme }) => ({
   textAlign: "center",
   color: theme.palette.text.secondary,
   display: "flex",
-  flexDirection:"row",
+  flexDirection: "row",
 }));
 
 function App() {
+  const [checked, setChecked] = useState([]);
   const [formData, setFormData] = useState([]);
   const { register, handleSubmit, reset } = useForm();
   const onSubmit = (data) => {
@@ -33,8 +34,18 @@ function App() {
     const newData = formData.filter((data, index) => {
       return index !== id;
     });
-    setFormData(newData)
+    setFormData(newData);
   };
+  const handleClick = (event) => {
+    var updatedList = [...checked];
+    let value = { [event.target.name]: event.target.value };
+    event.target.checked
+      ? (updatedList = [...checked, value])
+      : updatedList.splice(checked.indexOf(event.target.value), 1);
+    setChecked(updatedList);
+    console.log("updated List is: ", updatedList);
+  };
+  console.log("Updated List Is", typeof checked);
   return (
     <Container
       maxWidth="lg"
@@ -93,45 +104,61 @@ function App() {
         <Box>
           {formData.map((data, index) => (
             <Stack
-            key={index}
-            spacing={2}
-            sx={{
-              width: "100%",
-              justifyContent: "center",
-              marginTop: "10px",
-              display: "flex",
-              flexDirection: "row",
-            }}
-          >
-            <Item
+              key={index}
+              spacing={2}
               sx={{
+                width: "100%",
+                justifyContent: "center",
+                marginTop: "10px",
                 display: "flex",
-                justifyContent: "space-around",
                 flexDirection: "row",
-                backgroundColor: "transparent",
-                cursor: "pointer",
-                width:"50%"
               }}
             >
-              <input
-                type="checkbox"
-                style={{ margin: "0px 20px", backgroundColor: "blue", width: "20px" }}
-              />
-              <Typography variant="h4">
-                {data.content}
-              </Typography>
-  
-              <Button
-                type="button"
-                variant="text"
-                size="small"
-                onClick={()=>handleDelete(index)}
-                sx={{margin:"0px 20px"}}
+              <Item
+                sx={{
+                  display: "flex",
+                  justifyContent: "space-around",
+                  flexDirection: "row",
+                  backgroundColor: "transparent",
+                  cursor: "pointer",
+                  width: "50%",
+                }}
               >
-                Delete
-              </Button>
-            </Item>
-          </Stack>
+                <input
+                  type="checkbox"
+                  name="chekContent"
+                  value={data.content}
+                  onChange={handleClick}
+                  style={{
+                    margin: "0px 20px",
+                    backgroundColor: "blue",
+                    width: "20px",
+                  }}
+                />
+                {/* <Typography
+                  variant="h4"
+                  sx={{ textDecoration: checked != 0 ? "line-through" : null }}
+                >
+                  {data.content}
+                </Typography> */}
+                    <Typography
+                      variant="h4"
+                      sx={{ textDecoration: checked.map((d, index) =>(
+                        d.chekContent === data.content ? "line-through" : null ) )}}
+                    >
+                      {data.content}
+                    </Typography>
+                <Button
+                  type="button"
+                  variant="text"
+                  size="small"
+                  onClick={() => handleDelete(index)}
+                  sx={{ margin: "0px 20px" }}
+                >
+                  Delete
+                </Button>
+              </Item>
+            </Stack>
           ))}
         </Box>
       </Paper>
