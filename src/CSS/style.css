@@ -1,0 +1,9 @@
+*{
+    margin:"0px";
+    padding:"0px";
+}
+body{
+    background: linear-gradient(rgba(210, 132, 226, 0.519), #d7dbdf7c);
+    background-repeat: no-repeat;
+    height: 100vh;
+}
